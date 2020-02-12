@@ -1,10 +1,10 @@
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+const projectData = [];
 
 // Require Express to run server and routes
-const express = require('express')
+const express = require('express');
 // Dependencies
-const bodyParser = require('body-parse')
+const bodyParser = require('body-parser');
 
 // Start up an instance of app
 const app = express ();
@@ -22,11 +22,11 @@ app.use(cors());
 app.use(express.static('website'));
 
 // Setup Server
-const port = 8000;
+const port = 8080;
 const server = app.listen(port, listening);
 function listening (){
     //console.log ('server running');
-    console.log('running on localhost:${port}');
+    console.log(`running on localhost:${port}`);
 };
 
 //GET route to return the projectData object
@@ -36,8 +36,12 @@ app.get('/all', function(req, res){
 
 //POST route to receive data
 app.post('/add',function(req, res){
-    projectData['date'] = req.body.date;
-    projectData['temp'] = req.body.temp;
-    projectData['content'] = req.body.content;
-    res.send(projectData);
+    newEntry = {
+     date: req.body.date,
+     temp: req.body.temp,
+     content: req.body.content
+    }
+    projectData.push(newEntry)
+    console.log(projectData)
+
 });

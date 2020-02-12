@@ -6,28 +6,28 @@ const apiKey = '27f5835ff59655791ee03dad8c74ef47'
 let d = new Date();
 let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-//Event listener to add function 
+//Event listener to add function
 document.getElementById('generate').addEventListener('click',performAction);
 
 function performAction (event) {
-    event.preventDefault();
-    const zipCode = document.getElementById('zip').value;
-    const content = document.getElementById('feelings').value;
-
+    let zipCode = document.getElementById('zip').value;
+    let content = document.getElementById('feelings').value;
     getWeatherData(baseURL,zipCode,apiKey)
     .then(function(newEntry){
         postData('/add', {date:newDate, temp:newEntry.main.temp, content});
     })
-    .then(function(newData){
-        updateUI();
-    })
-    form.reset();
+    .then(function(newEntry){
+
+      updateUI()
+        }
+    )
 };
 
 //Function to GET web API Data
 
 const getWeatherData = async (baseURL,zipCode,apiKey) => {
-    const res = await fetch(baseURL,zipCode,apiKey);
+    const fetchURL = baseURL+zipCode+"&APPID="+apiKey;
+    const res = await fetch(baseURL+zipCode+"&APPID="+apiKey);
     try {
         const newEntry = await res.json();
         return newEntry;
@@ -56,12 +56,12 @@ const postData = async (url = '', data = {}) => {
 };
 
 const updateUI = async() => {
-    const req = await fetch(url);
+    const req = await fetch('/all');
     try {
-        const allData = await req.json()
-        document.getElementById('date').innerHTML = allData[0].date;
-        document.getElementById('temp').innerHTML = allData[0].temperature;
-        document.getElementById('content').innerHTML = allData[0].userResponse;
+        const allData = await req.json();
+        document.getElementById('date').innerHTML = 'Date: ' + allData[allData.length-1].date;
+        document.getElementById('temp').innerHTML = 'Temperture: ' + allData[allData.length-1].temp;
+        document.getElementById('content').innerHTML = 'Feelings: '+ allData[allData.length-1].content;
     } catch(error) {
         console.log('error', error);
     };
